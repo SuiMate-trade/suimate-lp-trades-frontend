@@ -12,9 +12,9 @@ interface IPropType {
 }
 
 const Options: Record<OrderTradersBy, string> = {
-  totalLiquiditySupplied: "Largest Liquidity Provided",
-  totalRewardsCollected: "Most Fee Rewards Collected",
-  lastTradeDate: "Most Recent Swap",
+  totalLiquidityProvided: "Largest Liquidity Provided",
+  liquidityFeesCollected: "Most Fee Rewards Collected",
+  lastLiquidityProvidedTimestampMs: "Most Recent LP",
 };
 
 const TopFilter = (props: IPropType) => {

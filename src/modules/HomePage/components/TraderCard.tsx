@@ -6,43 +6,22 @@ import { useCurrentAccount } from "@mysten/dapp-kit";
 import Avatar from "boring-avatars";
 import Image from "next/image";
 import Link from "next/link";
+import { DateTime } from "luxon";
 
 import PrimaryButton from "@/components/PrimaryButton";
 import useFavoriteTradersStore from "@/stores/useFavoriteTradersStore";
 import getEllipsisTxt from "@/utils/getEllipsisText";
-import { toDecimalString } from "@/utils/parseBignum";
-import { type TradersType } from "@/types/dataTypes/tradersType";
-import CoinsListHorizontal from "@/components/CoinsListHorizontal";
 import CoinsList from "@/constants/coinsList";
+import { TopTradersType } from "@/types/dataTypes/topTraders";
 
-// import { addToFavorite, removeFromFavorite } from '../utils/modifyFavorites';
+import { addToFavorite, removeFromFavorite } from "../utils/modifyFavorites";
+import numberWithCommas from "@/utils/numberWithComma";
+import { notification } from "antd";
+import { toDecimalString } from "@/utils/parseBignum";
 
 interface IPropType {
-  trader: TradersType;
+  trader: TopTradersType;
 }
-
-const sampleCoinsList = [
-  {
-    name: "Sui",
-    balance: 0,
-  },
-  {
-    name: "USDC",
-    balance: 0,
-  },
-  {
-    name: "Cetus Token",
-    balance: 0,
-  },
-  {
-    name: "Turbos",
-    balance: 0,
-  },
-  {
-    name: "USDT",
-    balance: 0,
-  },
-];
 
 const TraderCard = (props: IPropType) => {
   const { trader } = props;
@@ -74,12 +53,17 @@ const TraderCard = (props: IPropType) => {
           width={20}
           height={20}
           onClick={() => {
-            if (!account?.address) return;
+            if (!account?.address) {
+              notification.error({
+                message: "Please connect your wallet to perform this action",
+              });
+              return;
+            }
 
             if (!favoriteTraders.includes(trader.address)) {
-              // addToFavorite(account?.address, trader.address);
+              addToFavorite(account?.address, trader.address);
             } else {
-              // removeFromFavorite(account?.address, trader.address);
+              removeFromFavorite(account?.address, trader.address);
             }
           }}
         />
@@ -99,46 +83,88 @@ const TraderCard = (props: IPropType) => {
       <div className="w-full flex flex-col items-center justify-center">
         <p className="text-sm text-black-800">Total Liquidity Supplied</p>
         <p className={`text-3xl font-semibold text-green-300`}>
-          ${toDecimalString(trader.totalLiquiditySupplied)}
+          ${numberWithCommas(trader.totalLiquidityProvided.toFixed(2))}
         </p>
       </div>
       <div className="flex w-full justify-between items-center">
         <div className="w-full flex flex-col items-start justify-center">
-          <p className="text-sm text-black-700">Total Rewards Claimed</p>
-          <p className="text-base text-black-900">$10,231</p>
+          <p className="text-sm text-black-700">Total Fees Collected</p>
+          <p className="text-base text-black-900">
+            ${numberWithCommas(trader.liquidityFeesCollected.toFixed(2))}
+          </p>
         </div>
         <div className="w-full flex flex-col items-end justify-center">
           <p className="text-sm text-black-700">Last Txn At</p>
-          <p className="text-base text-black-900">9:05 PM, 16/05/2024</p>
+          <p className="text-base text-black-900">
+            {DateTime.fromMillis(
+              trader.lastLiquidityProvidedTimestampMs
+            ).toFormat("hh:mm a, MM/dd/yyyy")}
+          </p>
         </div>
       </div>
       <div className="flex flex-col items-center justify-center w-full gap-2">
-        <div className="flex justify-between items-center w-full">
-          <p className="text-sm text-black-700">Most Supplied Protocols:</p>
-          <CoinsListHorizontal
-            coins={sampleCoinsList.map((coin) => {
-              const icon = CoinsList.find(
-                (c) => c.name === coin.name
-              )?.iconUrl!;
-              return { ...coin, icon };
-            })}
-          />
-        </div>
-        <div className="flex justify-between items-center w-full">
-          <p className="text-sm text-black-700">Most Supplied Pools:</p>
-          <CoinsListHorizontal
-            coins={sampleCoinsList.map((coin) => {
-              const icon = CoinsList.find(
-                (c) => c.name === coin.name
-              )?.iconUrl!;
-              return { ...coin, icon };
-            })}
-          />
+        <p className="text-sm text-black-700">Most Supplied Pools:</p>
+        <div className="flex w-full items-start justify-center gap-5">
+          {trader.poolsSupplied.map((pool) => (
+            <div
+              key={pool.poolId}
+              className="flex flex-col items-center justify-center gap-0.5"
+            >
+              <div className="flex justify-center items-center gap-0.5">
+                <Image
+                  src={
+                    CoinsList.find(
+                      (c) => c.symbol === pool.tokenAMetadata.symbol
+                    )?.iconUrl ||
+                    pool.tokenAMetadata.iconUrl ||
+                    ""
+                  }
+                  alt={pool.tokenAMetadata.symbol}
+                  width={28}
+                  height={28}
+                  unoptimized
+                  className="rounded-full"
+                />
+                <Image
+                  src={
+                    CoinsList.find(
+                      (c) => c.symbol === pool.tokenBMetadata.symbol
+                    )?.iconUrl ||
+                    pool.tokenBMetadata.iconUrl ||
+                    ""
+                  }
+                  alt={pool.tokenBMetadata.symbol}
+                  width={28}
+                  height={28}
+                  unoptimized
+                  className="rounded-full"
+                />
+              </div>
+              <p className="text-xs text-black-800 text-center mt-1 mb-1">
+                {pool.tokenAMetadata.symbol}-{pool.tokenBMetadata.symbol} Pool{" "}
+                <br /> ({pool.platform})
+              </p>
+              <p className="text-xs text-blue-200 font-semibold text-center">
+                {toDecimalString(
+                  pool.tokenAAmount,
+                  pool.tokenAMetadata.decimals
+                )}{" "}
+                {pool.tokenAMetadata.symbol}
+              </p>
+              <p className="text-xs text-blue-200 font-semibold text-center">
+                {toDecimalString(
+                  pool.tokenBAmount,
+                  pool.tokenBMetadata.decimals
+                )}{" "}
+                {pool.tokenBMetadata.symbol}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
-      <div className="w-full flex justify-start items-center gap-3">
-        <Link href={`/traders/${trader.address}`}>
-          <PrimaryButton className="max-w-[180px]">
+      <div className="w-full flex justify-center items-center mt-1">
+        <Link href={`/traders/${trader.address}`} className="w-2/3">
+          <PrimaryButton>
             <p className="text-sm text-black-900">View All Trades</p>
           </PrimaryButton>
         </Link>

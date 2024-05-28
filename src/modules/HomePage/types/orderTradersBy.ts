@@ -1,4 +1,4 @@
 export type OrderTradersBy =
-  | "totalLiquiditySupplied"
-  | "lastTradeDate"
-  | "totalRewardsCollected";
+  | "totalLiquidityProvided"
+  | "liquidityFeesCollected"
+  | "lastLiquidityProvidedTimestampMs";
