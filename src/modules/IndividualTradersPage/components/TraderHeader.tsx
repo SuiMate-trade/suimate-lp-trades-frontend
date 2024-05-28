@@ -7,7 +7,6 @@ import { notification } from "antd";
 import Avatar from "boring-avatars";
 import Image from "next/image";
 
-import ComingSoonModal from "@/components/ComingSoonModal";
 import { TELEGRAM_BOT_URL } from "@/constants";
 import useTraderAlertsListStore from "@/stores/useTraderAlertsStore";
 import useUserDataStore from "@/stores/useUserDataStore";
@@ -22,6 +21,7 @@ import {
   addToFavorite,
   removeFromFavorite,
 } from "@/modules/HomePage/utils/modifyFavorites";
+import LpPlatformsModal from "./LpPlatformsModal";
 
 interface IPropType {
   address: string;
@@ -33,8 +33,7 @@ const TraderHeader = (props: IPropType) => {
   const { traderAlertsList } = useTraderAlertsListStore();
   const { favoriteTraders } = useFavoriteTradersStore();
 
-  const [isComingSoonModalOpen, setIsComingSoonModalOpen] = useState(false);
-  const [feature, setFeature] = useState("");
+  const [isLpPlatformsModalOpen, setIsLpPlatformsModalOpen] = useState(false);
   const { address } = props;
 
   const handleSetAlertsClick = async () => {
@@ -162,8 +161,7 @@ const TraderHeader = (props: IPropType) => {
       <div
         className="flex justify-center items-center gap-1 cursor-pointer"
         onClick={() => {
-          setFeature("Place Trade");
-          setIsComingSoonModalOpen(true);
+          setIsLpPlatformsModalOpen(true);
         }}
       >
         <Image
@@ -174,10 +172,9 @@ const TraderHeader = (props: IPropType) => {
         />
         <p className="text-base text-black-800">Provide Liquidity</p>
       </div>
-      <ComingSoonModal
-        isOpen={isComingSoonModalOpen}
-        setIsOpen={setIsComingSoonModalOpen}
-        featureName={feature}
+      <LpPlatformsModal
+        isOpen={isLpPlatformsModalOpen}
+        setIsOpen={setIsLpPlatformsModalOpen}
       />
     </div>
   );
