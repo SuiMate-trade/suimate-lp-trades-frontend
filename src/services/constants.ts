@@ -5,7 +5,7 @@ export const GET_TRADER_STATS_ENDPOINT =
 export const GET_POOLS_SUPPLIED_ENDPOINT =
   "https://getpoolssupplied-nx5osezpuq-uc.a.run.app";
 export const GET_PAST_TRADES_ENDPOINT =
-  "https://getpastspottrades-nx5osezpuq-uc.a.run.app";
+  "https://getpastlptrades-nx5osezpuq-uc.a.run.app";
 export const USER_FUNCTIONS_ENDPOINT =
   "https://userfunctions-nx5osezpuq-uc.a.run.app";
 export const ALERTS_FUNCTIONS_ENDPOINT =

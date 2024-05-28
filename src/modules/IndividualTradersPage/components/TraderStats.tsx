@@ -2,11 +2,15 @@
 
 import React from "react";
 
-// import useTradersStats from '@/stores/useTradersStats';
+import useTradersStats from "@/stores/useTradersStats";
+import numberWithCommas from "@/utils/numberWithComma";
+import usePoolsSuppliedStore from "@/stores/usePoolsSuppliedStore";
+import { DateTime } from "luxon";
 // import { isBignumberPositive, toDecimalString } from "@/utils/parseBignum";
 
 const TradersStats = () => {
-  // const { stats } = useTradersStats();
+  const { stats } = useTradersStats();
+  const { poolsSupplied } = usePoolsSuppliedStore();
 
   return (
     <div className="w-full flex flex-col items-center justify-start gap-3 pt-3">
@@ -14,31 +18,28 @@ const TradersStats = () => {
         <div className="flex flex-col items-start justify-center">
           <p className="text-base text-black-800">Liquidity Supplied</p>
           <p className="text-3xl font-semibold text-black-1000">
-            {/* ${toDecimalString(stats.accountBalance)} */}
-            $40,325.52
+            ${numberWithCommas(stats.totalLiquidityProvided.toFixed(2))}
           </p>
         </div>
         <div className="flex flex-col items-end justify-center">
           <p className="text-base text-black-800">Fee Rewards Earned</p>
-          <p className={`text-3xl font-semibold text-green-300`}>$1,325.00</p>
+          <p className={`text-3xl font-semibold text-green-300`}>
+            ${numberWithCommas(stats.liquidityFeesCollected.toFixed(2))}
+          </p>
         </div>
       </div>
       <div className="w-full flex flex-col items-center justify-center gap-3 px-3 border-b-[1px] border-black-400 pb-3">
         <div className="w-full flex items-center justify-between">
-          <p className="text-sm text-black-700">Total Liquidity Supplied</p>
-          <p className="text-sm text-black-900">423</p>
-        </div>
-        <div className="w-full flex items-center justify-between">
-          <p className="text-sm text-black-700">Total Liquidity Removed</p>
-          <p className="text-sm text-black-900">$12,295</p>
+          <p className="text-sm text-black-700">Total Pools Supplied</p>
+          <p className="text-sm text-black-900">{poolsSupplied.length}</p>
         </div>
         <div className="w-full flex items-center justify-between">
           <p className="text-sm text-black-700">Last Txn Made At</p>
-          <p className="text-sm text-black-900">9:05 PM, 16th May 2024</p>
-        </div>
-        <div className="w-full flex items-center justify-between">
-          <p className="text-sm text-black-700">Biggest Supply in Pool</p>
-          <p className="text-sm text-black-900">vSui-Sui ($50,230)</p>
+          <p className="text-sm text-black-900">
+            {DateTime.fromMillis(
+              stats.lastLiquidityProvidedTimestampMs
+            ).toFormat("hh:mm a, dd LLL yyyy")}
+          </p>
         </div>
       </div>
     </div>
