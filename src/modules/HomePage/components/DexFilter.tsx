@@ -21,14 +21,6 @@ const AvailableDexs = [
     name: "Cetus",
   },
   {
-    image: "/assets/images/platforms/kriya.webp",
-    name: "KriyaDex",
-  },
-  {
-    image: "/assets/images/platforms/aftermath.webp",
-    name: "Aftermath Finance",
-  },
-  {
     image: "/assets/images/platforms/turbos.webp",
     name: "Turbos",
   },
