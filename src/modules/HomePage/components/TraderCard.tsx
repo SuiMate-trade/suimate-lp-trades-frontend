@@ -114,12 +114,12 @@ const TraderCard = (props: IPropType) => {
                 <Image
                   src={
                     CoinsList.find(
-                      (c) => c.symbol === pool.tokenAMetadata.symbol
+                      (c) => c.symbol === pool.tokenAMetadata?.symbol
                     )?.iconUrl ||
-                    pool.tokenAMetadata.iconUrl ||
+                    pool.tokenAMetadata?.iconUrl ||
                     ""
                   }
-                  alt={pool.tokenAMetadata.symbol}
+                  alt={pool.tokenAMetadata?.symbol}
                   width={28}
                   height={28}
                   unoptimized
@@ -128,12 +128,12 @@ const TraderCard = (props: IPropType) => {
                 <Image
                   src={
                     CoinsList.find(
-                      (c) => c.symbol === pool.tokenBMetadata.symbol
+                      (c) => c.symbol === pool.tokenBMetadata?.symbol
                     )?.iconUrl ||
-                    pool.tokenBMetadata.iconUrl ||
+                    pool.tokenBMetadata?.iconUrl ||
                     ""
                   }
-                  alt={pool.tokenBMetadata.symbol}
+                  alt={pool.tokenBMetadata?.symbol}
                   width={28}
                   height={28}
                   unoptimized
@@ -141,22 +141,22 @@ const TraderCard = (props: IPropType) => {
                 />
               </div>
               <p className="text-xs text-black-800 text-center mt-1 mb-1">
-                {pool.tokenAMetadata.symbol}-{pool.tokenBMetadata.symbol} Pool{" "}
+                {pool.tokenAMetadata?.symbol}-{pool.tokenBMetadata?.symbol} Pool{" "}
                 <br /> ({pool.platform})
               </p>
               <p className="text-xs text-blue-200 font-semibold text-center">
                 {toDecimalString(
                   pool.tokenAAmount,
-                  pool.tokenAMetadata.decimals
+                  pool.tokenAMetadata?.decimals
                 )}{" "}
-                {pool.tokenAMetadata.symbol}
+                {pool.tokenAMetadata?.symbol}
               </p>
               <p className="text-xs text-blue-200 font-semibold text-center">
                 {toDecimalString(
                   pool.tokenBAmount,
-                  pool.tokenBMetadata.decimals
+                  pool.tokenBMetadata?.decimals
                 )}{" "}
-                {pool.tokenBMetadata.symbol}
+                {pool.tokenBMetadata?.symbol}
               </p>
             </div>
           ))}
